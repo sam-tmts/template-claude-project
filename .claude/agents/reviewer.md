@@ -24,7 +24,8 @@ Check, and report on, each of these:
    behaviour it claims to check?
 4. **Security.** Secrets or personal data in the diff; credential handling against
    ADR-0003; input validation; new network access; changes to protected paths
-   (`.devcontainer/`, `.claude/`, `.githooks/`, `.github/workflows/`, `SECURITY.md`).
+   (`.devcontainer/`, `.claude/`, `.githooks/`, `.github/workflows/`, `.github/scripts/`,
+   `SECURITY.md`).
 5. **Dependencies.** Any new dependency must have an entry in `docs/dependencies.md`
    and be pinned. Check the package name looks like the real, intended package.
 6. **Documentation.** `CHANGELOG.md` has an `Unreleased` entry; architecture, threat

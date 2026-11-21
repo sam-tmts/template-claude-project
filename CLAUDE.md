@@ -20,6 +20,13 @@ Read this first, every session.
 5. **Review.** Run the `reviewer` subagent on the full diff. Fix or explain every finding.
 6. **Open a PR** using the template. Never merge. Never push to `main`.
 
+**Trivial changes** skip steps 2, 3 and 5 and use the short PR description (see the PR
+template). Trivial means: filling in records (such as an approval log), fixing typos or
+wording in documentation, or moving changelog entries. It never covers code,
+configuration, CI, protected paths, dependencies, or anything that changes a CR's scope
+or acceptance criteria. A trivial change still references an existing CR, goes through
+a PR with passing CI, and is merged by the owner. If in doubt, it isn't trivial.
+
 ## Hard rules
 
 - **Secrets:** never read, print, request, create or commit real credentials. Use mocks
@@ -29,7 +36,8 @@ Read this first, every session.
 - **Dependencies:** no new dependency without approval and an entry in
   `docs/dependencies.md`. Check that the package name is the real, intended one.
 - **Protected paths:** don't edit `.devcontainer/`, `.claude/`, `.githooks/`,
-  `.github/workflows/` or `SECURITY.md` unless the current CR explicitly covers it.
+  `.github/workflows/`, `.github/scripts/` or `SECURITY.md` unless the current CR
+  explicitly covers it.
 - **Network:** once the dev container is in place, don't try to reach hosts outside its
   firewall allowlist or change the firewall. Tell the owner if a task needs a new host.
 - **Git:** no force-push, history rewriting, or branch deletion.
