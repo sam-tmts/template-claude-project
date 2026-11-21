@@ -21,7 +21,9 @@ design notes, acceptance criteria (each saying how it's verified), constraints, 
 approval log recording each gate. The implementation plan is a working document: it is
 agreed in plan mode and kept in the pull request description, not in the CR. A GitHub
 issue may track a CR, but the file is the specification. Commits are titled
-`CR-NNNN: <imperative summary>`, and every pull request links its CR.
+`CR-NNNN: <imperative summary>`, and every pull request links its CR. The one exception
+is Dependabot's routine updates of already approved dependencies, which the owner
+reviews and merges without a CR.
 
 ## Consequences
 

@@ -16,7 +16,7 @@ version numbers and a readable record of what changed.
 
 - Versions follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html).
 - Each project keeps its version in exactly one place (for example `pyproject.toml` or
-  `package.json`), set in its CR-0001.
+  `package.json`), set in its first CR.
 - Every CR states its semver impact, and every pull request adds its entries under
   `Unreleased` in `CHANGELOG.md`, in [Keep a Changelog](https://keepachangelog.com/)
   format.

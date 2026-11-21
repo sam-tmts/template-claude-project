@@ -11,5 +11,5 @@ config:
   MD033: false
   # Table pipe alignment is cosmetic and fights with hand-edited tables
   MD060: false
-  # CR plans number their steps continuously across phases so steps can be cited
+  # Numbered lists may continue across sections, so steps keep stable numbers
   MD029: false

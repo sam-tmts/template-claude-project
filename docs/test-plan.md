@@ -40,9 +40,13 @@ Checks that can't be automated. Each one names the acceptance criterion it verif
 | ID | Verifies | Steps | Expected result |
 |----|----------|-------|-----------------|
 | M1 | CR-0000 AC1 | Open a pull request whose description names no CR. Then edit the description to name `CR-9999`. Then edit it to name `CR-0000`. | The "PR references a CR" check fails, fails again, then passes. |
-| M2 | CR-0000 AC2 | Push a commit containing a fake, randomly generated GitHub token to a throwaway branch. If the push is accepted, open a pull request from it. | GitHub push protection rejects the push, or the CI secret scan fails on the pull request. Delete the branch afterwards. |
+| M2 | CR-0000 AC2 | Push a commit containing a fake secret to a throwaway branch. If the push is accepted, open a pull request from it. Record which of the two stopped it. | GitHub push protection rejects the push, or the CI secret scan fails and blocks the merge. Close the pull request and delete the branch afterwards (the commit stays reachable through the closed pull request, which is harmless for a fake secret). |
 | M3 | CR-0000 AC5 | Try to push a commit directly to `main`. | Rejected: "Changes must be made through a pull request". |
-| M4 | CR-0000 AC6 | Create a repository from the template on GitHub, and open a pull request in it naming CR-0000. Read its README. | Every template file is present, CI passes, and the README lists what a project must change first. Delete the repository afterwards. |
+| M4 | CR-0000 AC6 | Create a repository from the template on GitHub. Apply the repository settings in its README (GitHub doesn't copy settings from a template). Open a pull request naming CR-0000, then repeat M1 and M3 in the new repository. | Every template file is present, CI passes, M1 and M3 behave as in this repository, and the README lists the settings to apply and what a project must change first. Delete the repository afterwards. |
+
+CR-0000 AC3 (CI passes on the template) and AC4 (actions pinned, token read-only) are
+verified by the CI jobs on the CR-0000 pull request; AC4's job is
+`cr0000-ac4-actions-pinned`.
 
 ## Traceability
 

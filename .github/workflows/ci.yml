@@ -1,5 +1,5 @@
 # Language-neutral checks for every pull request and every push to main. Projects add
-# their own build and test jobs in their CR-0001. Protected path: changes need a CR.
+# their own build and test jobs in their first CR. Protected path: changes need a CR.
 #
 # Third-party actions are pinned to full commit SHAs (tag in the trailing comment) so a
 # moved or hijacked tag can't change what runs. Dependabot proposes updates.

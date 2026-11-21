@@ -5,11 +5,11 @@ desktop.ini
 
 # Editor state. .vscode/ is deliberately NOT ignored: a file such as
 # .vscode/tasks.json can run commands on the host, so any change to it must show up in
-# git status and in review. Shared editor settings belong in the dev container configuration.
+# git status and in review.
 .idea/
 *.swp
 
-# Secrets and credentials: these must never be committed (see ADR-0004)
+# Secrets and credentials: these must never be committed (see ADR-0003)
 .env
 .env.*
 !.env.example
@@ -26,4 +26,4 @@ desktop.ini
 *.tmp
 tmp/
 
-# Language-specific entries are added by each project's CR-0001
+# Language-specific entries are added by each project's first CR

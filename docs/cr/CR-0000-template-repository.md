@@ -68,8 +68,10 @@ ADR-0003 (real secrets never enter the repository). Relies on: none.
       *Verified by:* CI check `cr0000-ac4-actions-pinned`.
 - [ ] AC5: A direct push to `main` is rejected.
       *Verified by:* manual check M3 (first done on 2026-11-21).
-- [ ] AC6: A repository created from the template has all of the above, and its README
-      says what a project must change first (owner name, changelog, project details).
+- [ ] AC6: A repository created from the template has all of the above once the
+      repository settings listed in its README are applied (GitHub doesn't copy
+      settings from a template), and its README says what a project must change first
+      (owner name, changelog, project details).
       *Verified by:* manual check M4.
 
 Manual checks M1 to M4 are written up in `docs/test-plan.md`.
@@ -94,5 +96,6 @@ Manual checks M1 to M4 are written up in `docs/test-plan.md`.
 | Original plan approved | 2026-11-21 | Sam (sam-tmts) | Superseded |
 | Rewrite approved | 2026-11-21 | Sam (sam-tmts) | Lean scope; container moved to CR-0001 |
 | Plan approved | 2026-11-21 | Sam (sam-tmts) | Plan in the PR description |
+| AC6 rewording approved | | | Review finding: settings aren't copied from a template |
 | PR merged | | | |
 | Released (v0.1.0) | | | |

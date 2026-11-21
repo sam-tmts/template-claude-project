@@ -41,9 +41,12 @@ template.
 1. On GitHub, click **Use this template** → **Create a new repository**.
 2. In the new repository's settings:
    - **Rules → Rulesets:** protect the default branch: require a pull request, block
-     force pushes, restrict deletions.
-   - **Advanced Security:** turn on Dependabot alerts, secret scanning and push
-     protection.
+     force pushes, restrict deletions, and require these status checks to pass:
+     `Secret scan (gitleaks)`, `Markdown lint`, `Actions pinned and token read-only`
+     and `PR references a CR`. (GitHub lists a check here only after it has run once,
+     so add them after the first pull request.)
+   - **Advanced Security:** turn on Dependabot alerts, secret scanning, push protection
+     and private vulnerability reporting (which `SECURITY.md` points to).
    - **Actions → General:** require approval for workflows from all outside
      contributors, and set workflow permissions to read-only.
 3. Write the project's first CR (see below) and work through it as `CLAUDE.md`
