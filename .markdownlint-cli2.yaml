@@ -1,0 +1,15 @@
+# Markdown lint settings, used locally and in CI
+config:
+  # Long table rows and URLs make a hard line-length limit more noise than help
+  MD013: false
+  # Templates (PR template, issue bodies) don't start with a top-level heading
+  MD041: false
+  # Keep a Changelog repeats "Added", "Changed" and so on under each version
+  MD024:
+    siblings_only: true
+  # Templates use <placeholder> text, which the linter mistakes for HTML
+  MD033: false
+  # Table pipe alignment is cosmetic and fights with hand-edited tables
+  MD060: false
+  # Numbered lists may continue across sections, so steps keep stable numbers
+  MD029: false

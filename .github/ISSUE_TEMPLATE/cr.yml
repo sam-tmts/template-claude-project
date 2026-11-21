@@ -1,0 +1,35 @@
+name: Change request
+description: Track a change request. The CR file in docs/cr/ is the specification; this issue only tracks it.
+title: "CR-NNNN: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Write the CR itself as a file in `docs/cr/`, starting from `docs/cr/CR-TEMPLATE.md`.
+        This issue tracks its progress (see ADR-0001).
+  - type: input
+    id: cr-file
+    attributes:
+      label: CR file
+      description: Path to the CR in the repository
+      placeholder: docs/cr/CR-0001-short-name.md
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: One or two sentences on what the CR changes and why
+    validations:
+      required: true
+  - type: dropdown
+    id: semver
+    attributes:
+      label: Semver impact
+      options:
+        - major
+        - minor
+        - patch
+        - none
+    validations:
+      required: true
