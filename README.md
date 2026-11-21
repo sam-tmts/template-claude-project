@@ -45,10 +45,13 @@ template.
      `Secret scan (gitleaks)`, `Markdown lint`, `Actions pinned and token read-only`
      and `PR references a CR`. (GitHub lists a check here only after it has run once,
      so add them after the first pull request.)
-   - **Advanced Security:** turn on Dependabot alerts, secret scanning, push protection
-     and private vulnerability reporting (which `SECURITY.md` points to).
-   - **Actions → General:** require approval for workflows from all outside
-     contributors, and set workflow permissions to read-only.
+   - **Security → Advanced Security:** turn on Dependabot alerts, **Secret
+     Protection** (GitHub's name for secret scanning) and its **Push protection**
+     option, and private vulnerability reporting (which `SECURITY.md` points to).
+   - **Actions → General** (under **Actions** in the Settings sidebar, not the
+     top-level General page): under "Approval for running fork pull request workflows
+     from contributors", require approval for all external contributors; under
+     "Workflow permissions", choose read-only and save.
 3. Write the project's first CR (see below) and work through it as `CLAUDE.md`
    describes.
 

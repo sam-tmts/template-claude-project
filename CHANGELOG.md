@@ -9,6 +9,11 @@ heading and is tagged `vX.Y.Z`.
 
 ## [Unreleased]
 
+### Fixed
+
+- README: the repository settings steps now use GitHub's current names (Secret
+  Protection) and say where the Actions settings are (CR-0000).
+
 ## [0.1.0] - 2026-11-21
 
 ### Added
