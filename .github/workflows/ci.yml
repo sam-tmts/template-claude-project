@@ -70,22 +70,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Check the PR description names a CR that exists
+      - name: Check the PR says which existing CR it implements
         # The PR body is untrusted text: pass it in an environment variable, never
         # straight into the script, so it can't inject shell commands.
         env:
           PR_BODY: ${{ github.event.pull_request.body }}
-        run: |
-          ids=$(printf '%s' "$PR_BODY" | grep -Eo 'CR-[0-9]{4}' | sort -u || true)
-          if [ -z "$ids" ]; then
-            echo "::error::The PR description must reference a change request, such as CR-0001"
-            exit 1
-          fi
-          for id in $ids; do
-            if ls docs/cr/"$id"-*.md >/dev/null 2>&1; then
-              echo "Found $id in docs/cr/"
-            else
-              echo "::error::$id is referenced but there is no docs/cr/$id-*.md"
-              exit 1
-            fi
-          done
+        run: bash .github/scripts/check-cr-reference.sh
