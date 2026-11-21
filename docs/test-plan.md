@@ -32,7 +32,13 @@ The single command that runs every automated check, locally and in CI:
 
 For the template itself, the automated checks are the CI jobs in
 `.github/workflows/ci.yml`, which run on every pull request and every push to `main`,
-and the container checks, run in a terminal inside the dev container:
+the firewall's fail-closed test, which needs no container:
+
+```sh
+bash .devcontainer/tests/test-firewall-fails-closed.sh
+```
+
+and the container checks, run in a VS Code terminal attached to the dev container:
 
 ```sh
 bash .devcontainer/verify-container.sh
@@ -48,13 +54,13 @@ Checks that can't be automated. Each one names the acceptance criterion it verif
 | M2 | CR-0000 AC2 | Push a commit containing a fake secret to a throwaway branch. If the push is accepted, open a pull request from it. Record which of the two stopped it. | GitHub push protection rejects the push, or the CI secret scan fails and blocks the merge. Close the pull request and delete the branch afterwards (the commit stays reachable through the closed pull request, which is harmless for a fake secret). |
 | M3 | CR-0000 AC5 | Try to push a commit directly to `main`. | Rejected: "Changes must be made through a pull request". |
 | M4 | CR-0000 AC6 | Create a repository from the template on GitHub. Apply the repository settings in its README (GitHub doesn't copy settings from a template). Open a pull request naming CR-0000, then repeat M1 and M3 in the new repository. | Every template file is present, CI passes, M1 and M3 behave as in this repository, and the README lists the settings to apply and what a project must change first. Delete the repository afterwards. |
-| M5 | CR-0001 AC1 | In a copy of the project, add a hostname that doesn't exist (for example `no-such-host.invalid`) to `.devcontainer/allowed-domains.txt`, rebuild the container, and watch it start. Then, in its terminal, try `curl https://api.github.com/zen`. Delete the copy afterwards. | Firewall setup reports an error, and the `curl` fails: nothing gets out. |
-| M6 | CR-0001 AC2 | Run `verify-container.sh`. | Every `cr0001-ac2-…` check passes. |
-| M7 | CR-0001 AC3 | Run `verify-container.sh`. | Every `cr0001-ac3-…` check passes. |
-| M8 | CR-0001 AC4 | In Claude Code inside the container: create a dummy `.env` file and ask Claude to read it, directly and with `cat`; ask it to force-push a branch; ask it to merge a pull request; ask it to edit a file in `.devcontainer/`. | The first three are refused; the edit asks for permission first. |
-| M9 | CR-0001 AC5 | Run `verify-container.sh`. | The `cr0001-ac5-precommit-blocks-secret` check passes. |
+| M5 | CR-0001 AC1 | In a copy of the project, add a hostname that doesn't exist (for example `no-such-host.invalid`) to `.devcontainer/allowed-domains.txt`, rebuild the container, and watch it start. Then, in its terminal, try `curl https://api.github.com/zen` and `curl https://api.anthropic.com`. If VS Code won't attach after the error, use `docker exec -it <container> bash` from the host. Delete the copy afterwards. | Firewall setup reports an error, and both `curl` commands fail: nothing gets out. (The automated test `cr0001-ac1-firewall-fails-closed` checks the same logic without a container.) |
+| M6 | CR-0001 AC2 | Run `verify-container.sh` in a VS Code terminal attached to the container. On the first build, also record the image digests (`docker image inspect --format '{{index .RepoDigests 0}}' node:22-bookworm ghcr.io/gitleaks/gitleaks:v8.30.1` on the host) and the Claude Code extension version (VS Code's Extensions view), for pinning. | Every `cr0001-ac2-…` check passes. |
+| M7 | CR-0001 AC3 | Run `verify-container.sh` in a VS Code terminal attached to the container. | Every `cr0001-ac3-…` check passes. |
+| M8 | CR-0001 AC4 | In Claude Code inside the container, explain that this is an owner-authorised test of the permission rules, then ask it to: read a dummy `.env` file with its file tool; run `cat .env`; force-push a branch; run `gh pr merge`; edit a file in `.devcontainer/`. | For the first four, Claude Code attempts the action and it is blocked by a permission rule (the deny message is shown), not just declined by the model. The edit asks for permission first. |
+| M9 | CR-0001 AC5 | Run `verify-container.sh` in a VS Code terminal attached to the container. | The `cr0001-ac5-precommit-blocks-secret` check passes (a clean commit goes through and a fake token is blocked by gitleaks). |
 | M10 | CR-0001 AC6 | Start Claude Code in the container's terminal, sign in, and ask it a simple question about the repository. To check whether a sign-in host is needed, remove it from the allowlist in a copy, rebuild, and sign in again. | Sign-in and the request work with the hosts on the allowlist; any host found not to be needed is removed by a follow-up change. |
-| M11 | CR-0001 AC9 | With VS Code attached to the container, open the Claude Code extension and ask it a simple question. Check `.devcontainer/allowed-domains.txt` against the threat model. | The extension works, and the allowlist has no extension marketplace hosts (unless the fallback in ADR-0004 was needed and recorded). |
+| M11 | CR-0001 AC9 | With VS Code attached to the container, open the Claude Code extension and ask it a simple question. In the container, compare `/usr/local/etc/allowed-domains.txt` (the copy in use) with the list in the threat model. | The extension works, and the allowlist in use matches the threat model, with no extension marketplace hosts (unless the fallback in ADR-0004 was needed and recorded). |
 
 CR-0000 AC3 (CI passes on the template) and AC4 (actions pinned, token read-only) are
 verified by the CI jobs on the CR-0000 pull request; AC4's job is

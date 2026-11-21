@@ -88,8 +88,8 @@ ADR-0003.
 
 - [ ] AC1: If firewall setup fails at any step, the container has no outbound access
       apart from DNS to its own resolver.
-      *Verified by:* manual check M5 (break the allowlist on purpose, restart, try an
-      allowed host).
+      *Verified by:* automated test `cr0001-ac1-firewall-fails-closed`, and manual
+      check M5 (break the allowlist on purpose, restart, try allowed hosts).
 - [ ] AC2: From inside the container, `example.com` is unreachable; GitHub and the
       Anthropic API are reachable over HTTPS; other ports on allowed hosts (for example
       SSH to GitHub) are not.

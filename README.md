@@ -61,8 +61,12 @@ the dev container.
    The first two stop VS Code sharing your git credentials with containers. The third
    makes VS Code download extensions on your computer and copy them in, so the container
    never contacts the extension marketplace. These settings are per user and per
-   machine, so every developer needs them; `verify-container.sh` checks the result.
-5. **Install git**, needed once to clone a repository (on macOS:
+   machine, so every developer needs them. `verify-container.sh` checks that no git
+   credentials reach the container.
+5. **Don't trust project folders in VS Code on the host.** If VS Code asks whether you
+   trust the authors of a folder opened on the host, choose **No** (Restricted Mode).
+   Inside the container, trusting the folder is fine.
+6. **Install git**, needed once to clone a repository (on macOS:
    `xcode-select --install`).
 
 ## Rules for working on the host
@@ -70,8 +74,11 @@ the dev container.
 The project folder is shared between your computer and the container, so a file written
 inside the container can later run on your computer. Three rules close that gap:
 
-1. **Open the project only in the container** (VS Code's **Reopen in Container**), and
-   don't run tasks or scripts from it on the host.
+1. **Open the project straight into the container**, with **Dev Containers: Open Folder
+   in Container…** from the Command Palette, or from VS Code's list of recent
+   containers. Opening the folder on the host first, even briefly, lets VS Code's git
+   support run on the host against the shared `.git/`. Don't run tasks or scripts from
+   the project on the host.
 2. **Review changes to `.devcontainer/`, `.vscode/` and `.githooks/` before rebuilding or
    reopening the container.** VS Code runs some settings in `devcontainer.json` on the
    host, and `.vscode/tasks.json` can run commands when the folder opens.
@@ -95,9 +102,10 @@ inside the container can later run on your computer. Three rules close that gap:
      top-level General page): under "Approval for running fork pull request workflows
      from contributors", require approval for all external contributors; under
      "Workflow permissions", choose read-only and save.
-3. Clone the repository into your projects folder and open it in VS Code. When asked,
-   choose **Reopen in Container**. The first build takes a few minutes; the firewall
-   is set up every time the container starts.
+3. Clone the repository into your projects folder, then in VS Code run **Dev
+   Containers: Open Folder in Container…** and choose that folder. The first build
+   takes a few minutes; the firewall is set up every time the container starts. Always
+   start the container from VS Code: started any other way, it has no firewall.
 4. In the container's terminal, run `bash .devcontainer/verify-container.sh`. Don't go
    on until every check passes.
 5. Still in the container, set your git identity for this repository, using your

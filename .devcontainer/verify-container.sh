@@ -1,6 +1,7 @@
 #!/bin/bash
 # Checks that the dev container is contained, for CR-0001 AC2, AC3 and AC5. Run it in a
-# terminal inside the container:
+# VS Code terminal attached to the container (not through "docker exec", which would
+# miss the VS Code git sign-in check):
 #
 #   bash .devcontainer/verify-container.sh
 #
@@ -98,13 +99,22 @@ else
     tmp=$(mktemp -d)
     git -C "$tmp" init -q
     git -C "$tmp" config user.name "verify" && git -C "$tmp" config user.email "verify@example.invalid"
-    token="ghp_$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 36)"
-    printf 'token = "%s"\n' "$token" > "$tmp/fake.txt"
-    git -C "$tmp" add fake.txt
-    if git -C "$tmp" commit -q -m "should be blocked" >/dev/null 2>&1; then
-        result cr0001-ac5-precommit-blocks-secret 1 "a commit containing a fake token was accepted"
+    # Control: a clean commit must go through, so a hook that blocks everything can't pass
+    echo "nothing secret here" > "$tmp/clean.txt"
+    git -C "$tmp" add clean.txt
+    if ! git -C "$tmp" commit -q -m "clean" >/dev/null 2>&1; then
+        result cr0001-ac5-precommit-blocks-secret 1 "the hook blocked a clean commit, so it isn't working"
     else
-        result cr0001-ac5-precommit-blocks-secret 0 "a commit containing a fake token was blocked"
+        token="ghp_$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 36)"
+        printf 'token = "%s"\n' "$token" > "$tmp/fake.txt"
+        git -C "$tmp" add fake.txt
+        if out=$(git -C "$tmp" commit -m "should be blocked" 2>&1); then
+            result cr0001-ac5-precommit-blocks-secret 1 "a commit containing a fake token was accepted"
+        elif echo "$out" | grep -q "leaks found"; then
+            result cr0001-ac5-precommit-blocks-secret 0 "clean commit accepted; fake token blocked by gitleaks"
+        else
+            result cr0001-ac5-precommit-blocks-secret 1 "commit failed, but not because gitleaks found a leak"
+        fi
     fi
     rm -rf "$tmp"
 fi

@@ -24,20 +24,25 @@ to personal data:
 - Host git credentials, the host SSH agent and VS Code's git sign-in passthrough are not
   available in the container. GitHub access from inside uses a fine-grained token
   limited to the one repository.
-- Outbound traffic is denied by default, and the deny is applied before anything else
-  so the firewall fails closed. Allowed: HTTPS to GitHub's published address ranges and
+- Outbound traffic is denied by default. The deny is applied before anything else, and
+  a failed setup empties the allowed set, so the firewall fails closed. Allowed: HTTPS to GitHub's published address ranges and
   to the hosts listed in `.devcontainer/allowed-domains.txt`, and DNS to the container's
   own resolver.
-- VS Code extensions are downloaded on the host and copied into the container, pinned
-  to a version with auto-update off, so the container never contacts the extension
-  marketplace.
+- VS Code extensions are downloaded on the host and copied into the container, with
+  auto-update off, so the container never contacts the extension marketplace.
+- gitleaks scans every commit made in the container for secrets, through a git hook set
+  in the container's own git config.
 - The container is based on Anthropic's reference dev container, pinned to a recorded
-  upstream commit, with differences documented in the Dockerfile header. Images are
-  pinned by digest and kept up to date by Dependabot.
+  upstream commit, with differences documented in the Dockerfile header. Images and the
+  Claude Code extension are pinned exactly (image digests and the extension version are
+  recorded after the first build, then pinned), and Dependabot proposes image
+  updates.
 - Adding a host to the allowlist is a change to a protected path and needs a CR.
 
 ## Consequences
 
+- The firewall exists only if the container is started from VS Code, which runs the
+  firewall script; a container started another way has open outbound access.
 - An agent mistake or compromise can directly reach only the project folder and the
   allowlisted hosts. The project folder is shared with the host, though, so files written
   there (for example `devcontainer.json`, `.vscode/tasks.json` or git hooks) can run code

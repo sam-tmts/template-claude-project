@@ -17,7 +17,8 @@ Each entry records: **purpose**, **where it's pinned**, **alternatives considere
   container.
 - **Pinned in:** `.github/workflows/ci.yml` (exact version and SHA-256 checksum of the
   release archive, updated by hand; see the backlog issue) and `.devcontainer/Dockerfile`
-  (official image `ghcr.io/gitleaks/gitleaks`, updated by Dependabot).
+  (official image `ghcr.io/gitleaks/gitleaks`, by tag until the first build records its
+  digest; updated by Dependabot).
 - **Alternatives:** GitHub secret scanning alone (covers fewer secret formats);
   `trufflehog` (heavier).
 - **Licence:** MIT. **Health:** widely used; actively maintained.
@@ -26,7 +27,8 @@ Each entry records: **purpose**, **where it's pinned**, **alternatives considere
 
 - **Purpose:** base operating system for the dev container; Node.js is needed to run
   Claude Code.
-- **Pinned in:** `.devcontainer/Dockerfile` (`FROM` line); Dependabot proposes updates.
+- **Pinned in:** `.devcontainer/Dockerfile` (`FROM` line), by tag until the first build
+  records its digest; Dependabot proposes updates.
 - **Alternatives:** Microsoft's `devcontainers/base` image plus a Node install step
   (one more moving part).
 - **Licence:** MIT (Node.js); Debian packages under their own free licences.
@@ -38,22 +40,27 @@ Each entry records: **purpose**, **where it's pinned**, **alternatives considere
 - **Pinned in:** `.devcontainer/devcontainer.json` (`CLAUDE_CODE_VERSION` build
   argument). Auto-update is switched off in the container, so the version only changes
   through a reviewed CR.
-- **Alternatives:** Anthropic's native installer (the npm package can be pinned exactly).
+- **Alternatives:** Anthropic's native installer; the npm package was chosen because it
+  can be pinned to an exact version.
 - **Licence:** proprietary, Anthropic commercial terms. **Health:** maintained by
   Anthropic; frequent releases.
 
 ## Claude Code VS Code extension (`anthropic.claude-code`)
 
 - **Purpose:** Claude Code inside VS Code, attached to the dev container.
-- **Pinned in:** `.devcontainer/devcontainer.json`. Downloaded on the host and copied
-  into the container; extension auto-update is off.
+- **Pinned in:** `.devcontainer/devcontainer.json`, once the first build records the
+  version. Downloaded on the host and copied into the container; extension auto-update
+  is off.
+- **Alternatives:** Claude Code in the container's terminal only, which needs no
+  extension.
 - **Licence:** Anthropic commercial terms. **Health:** maintained by Anthropic.
 
 ## Debian packages (apt)
 
 - **Purpose:** `git`, `gh` (GitHub CLI), `iptables`, `ipset`, `iproute2`, `dnsutils`,
   `aggregate`, `jq`, `curl`, `sudo`, `less`, `procps`, `nano`, `ca-certificates`. The
-  firewall needs `iptables`, `ipset`, `dnsutils`, `aggregate`, `jq` and `curl`.
+  firewall needs `iptables`, `ipset`, `iproute2`, `dnsutils`, `aggregate`, `jq` and
+  `curl`.
 - **Pinned in:** `.devcontainer/Dockerfile`; versions follow the base image's Debian
   release.
 - **Licence:** various free software licences. **Health:** Debian security team.
