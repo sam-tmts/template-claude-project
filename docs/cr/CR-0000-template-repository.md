@@ -2,7 +2,7 @@
 
 | Field         | Value                                     |
 |---------------|-------------------------------------------|
-| Status        | Approved                                  |
+| Status        | Done                                      |
 | Author        | sam-tmts (drafted with Claude)            |
 | Created       | 2026-11-20, rewritten 2026-11-21          |
 | Semver impact | Initial release of the template: v0.1.0   |
@@ -54,21 +54,21 @@ ADR-0003 (real secrets never enter the repository). Relies on: none.
 
 ## Acceptance criteria
 
-- [ ] AC1: A pull request whose description doesn't reference a CR, or references one
+- [x] AC1: A pull request whose description doesn't reference a CR, or references one
       with no file in `docs/cr/`, fails CI.
       *Verified by:* manual check M1 (a throwaway pull request for each case).
-- [ ] AC2: A pushed commit containing a fake secret is stopped, by GitHub push
+- [x] AC2: A pushed commit containing a fake secret is stopped, by GitHub push
       protection or by the CI secret scan.
       *Verified by:* manual check M2.
-- [ ] AC3: CI passes on the template itself (secret scan, markdown lint, CR check,
+- [x] AC3: CI passes on the template itself (secret scan, markdown lint, CR check,
       action pinning).
       *Verified by:* CI on this CR's pull request.
-- [ ] AC4: Every third-party GitHub Action is pinned to a full commit SHA, and the
+- [x] AC4: Every third-party GitHub Action is pinned to a full commit SHA, and the
       workflow token is read-only.
       *Verified by:* CI check `cr0000-ac4-actions-pinned`.
-- [ ] AC5: A direct push to `main` is rejected.
+- [x] AC5: A direct push to `main` is rejected.
       *Verified by:* manual check M3 (first done on 2026-11-21).
-- [ ] AC6: A repository created from the template has all of the above once the
+- [x] AC6: A repository created from the template has all of the above once the
       repository settings listed in its README are applied (GitHub doesn't copy
       settings from a template), and its README says what a project must change first
       (owner name, changelog, project details).
@@ -98,4 +98,5 @@ Manual checks M1 to M4 are written up in `docs/test-plan.md`.
 | Plan approved | 2026-11-21 | Sam (sam-tmts) | Plan in the PR description |
 | AC6 rewording approved | 2026-11-21 | Sam (sam-tmts) | Review finding: settings aren't copied from a template |
 | PR merged | 2026-11-21 | Sam (sam-tmts) | PR #1, merge commit 5656df3; M1 to M3 done, M4 after release |
-| Released (v0.1.0) | | | |
+| Released (v0.1.0) | 2026-11-21 | Sam (sam-tmts) | Tag v0.1.0 on merge commit 07a4ad8 |
+| M4 done, CR closed | 2026-11-21 | Sam (sam-tmts) | Repository created from the template; M1 and M3 repeated there as expected. Found two README errors in the settings steps, fixed in the closing PR |
