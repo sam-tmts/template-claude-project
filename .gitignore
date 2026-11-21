@@ -5,7 +5,7 @@ desktop.ini
 
 # Editor state. .vscode/ is deliberately NOT ignored: a file such as
 # .vscode/tasks.json can run commands on the host, so any change to it must show up in
-# git status and in review. Shared editor settings belong in devcontainer.json.
+# git status and in review. Shared editor settings belong in the dev container configuration.
 .idea/
 *.swp
 
