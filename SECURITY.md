@@ -20,7 +20,8 @@ Only the latest release is supported.
 
 ## How agents are contained
 
-Coding agents will work inside a dev container that sees only the project folder and
-can reach only an allowlist of network hosts. That container, and a local secret scan
-before every commit, arrive with CR-0001. Until then, coding agents are not run on the
-owner's computer against this repository. See `docs/threat-model.md`.
+Coding agents work inside a dev container that sees only the project folder and can
+reach only an allowlist of network hosts over HTTPS, run from a dedicated developer
+account with no access to personal data. Every commit made in the container is scanned
+for secrets before it is created. The details, and what this does and doesn't protect
+against, are in `docs/threat-model.md` and ADR-0004.

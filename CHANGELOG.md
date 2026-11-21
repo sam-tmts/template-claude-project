@@ -9,6 +9,21 @@ heading and is tagged `vX.Y.Z`.
 
 ## [Unreleased]
 
+### Added
+
+- Dev container with a default-deny outbound firewall that fails closed, HTTPS only,
+  and a script to verify it (CR-0001).
+- Secret scan before every commit made in the container (CR-0001).
+- ADR-0004 (dev container), container setup and host rules in the README, and checks
+  M5 to M11 in the test plan (CR-0001).
+- A lighter path for trivial changes, and release criteria that allow experimental work
+  if it's labelled as such (CR-0001).
+
+### Changed
+
+- Claude Code permission rules tightened; `.github/scripts/` is a protected path
+  (CR-0001).
+
 ### Fixed
 
 - README: the repository settings steps now use GitHub's current names (Secret

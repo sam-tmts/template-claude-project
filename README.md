@@ -15,6 +15,9 @@ it works the same way:
   ([ADR-0002](docs/adr/ADR-0002-semver-and-changelog.md)).
 - **Real secrets never enter the repository**
   ([ADR-0003](docs/adr/ADR-0003-secrets-outside-repository.md)).
+- **Agents work inside a dev container** that sees only the project folder and can
+  reach only an allowlist of hosts
+  ([ADR-0004](docs/adr/ADR-0004-dev-container-with-firewall.md)).
 
 ## What's inside
 
@@ -22,6 +25,8 @@ it works the same way:
 |------|------------|
 | `CLAUDE.md` | Instructions every agent session reads first: workflow, rules, conventions |
 | `.claude/` | Claude Code permission rules, and the `reviewer` and `test-writer` subagents |
+| `.devcontainer/` | The dev container, its firewall, its host allowlist, and a script to verify it |
+| `.githooks/pre-commit` | Scans every commit made in the container for secrets |
 | `.github/` | CI, pull request template, CR issue form, Dependabot, CODEOWNERS |
 | `docs/cr/` | Change requests, and the template for new ones |
 | `docs/adr/` | Architecture decision records, and the template for new ones |
@@ -29,12 +34,50 @@ it works the same way:
 | `docs/` (other) | Architecture, threat model and dependency register, for each project to fill |
 | `CHANGELOG.md`, `SECURITY.md`, `LICENSE` | Release notes, security policy, MIT licence |
 
-## Before you start: running agents safely
+## One-time setup on your computer
 
-The next version of this template (CR-0001) adds a dev container that keeps coding
-agents away from everything on your computer except the project folder. Until then,
-don't run Claude Code on your own computer against a repository made from this
-template.
+Install as little as possible on the computer itself: language toolchains live inside
+the dev container.
+
+1. **Use a dedicated developer account.** Create a separate standard (non-admin) user
+   account for development, with no access to your personal files, and do everything
+   below in it.
+2. **Install a container runtime.** [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+   works on macOS and Windows and is what VS Code's Dev Containers feature is built
+   around. In its settings, under **Resources → File sharing**, remove the default
+   locations and share only the folder you keep projects in (for example `~/Projects`).
+3. **Install [VS Code](https://code.visualstudio.com/) and its Dev Containers
+   extension.** Don't install the Claude Code extension on the computer itself: it is
+   installed inside the container automatically.
+4. **Add these to VS Code's user settings** (Command Palette → "Preferences: Open User
+   Settings (JSON)"):
+
+   ```json
+   "dev.containers.copyGitConfig": false,
+   "dev.containers.gitCredentialHelperConfigLocation": "none",
+   "remote.downloadExtensionsLocally": true
+   ```
+
+   The first two stop VS Code sharing your git credentials with containers. The third
+   makes VS Code download extensions on your computer and copy them in, so the container
+   never contacts the extension marketplace. These settings are per user and per
+   machine, so every developer needs them; `verify-container.sh` checks the result.
+5. **Install git**, needed once to clone a repository (on macOS:
+   `xcode-select --install`).
+
+## Rules for working on the host
+
+The project folder is shared between your computer and the container, so a file written
+inside the container can later run on your computer. Three rules close that gap:
+
+1. **Open the project only in the container** (VS Code's **Reopen in Container**), and
+   don't run tasks or scripts from it on the host.
+2. **Review changes to `.devcontainer/`, `.vscode/` and `.githooks/` before rebuilding or
+   reopening the container.** VS Code runs some settings in `devcontainer.json` on the
+   host, and `.vscode/tasks.json` can run commands when the folder opens.
+3. **After the first clone, don't run git on the host in these folders.** The container
+   can write to `.git/`, and git on the host would run any hooks or settings it finds
+   there. Use git inside the container, or GitHub's website.
 
 ## Starting a new project
 
@@ -52,7 +95,26 @@ template.
      top-level General page): under "Approval for running fork pull request workflows
      from contributors", require approval for all external contributors; under
      "Workflow permissions", choose read-only and save.
-3. Write the project's first CR (see below) and work through it as `CLAUDE.md`
+3. Clone the repository into your projects folder and open it in VS Code. When asked,
+   choose **Reopen in Container**. The first build takes a few minutes; the firewall
+   is set up every time the container starts.
+4. In the container's terminal, run `bash .devcontainer/verify-container.sh`. Don't go
+   on until every check passes.
+5. Still in the container, set your git identity for this repository, using your
+   GitHub noreply address:
+
+   ```sh
+   git config user.name "Your Name"
+   git config user.email "12345678+your-id@users.noreply.github.com"
+   ```
+
+6. Create a [fine-grained personal access token](https://github.com/settings/personal-access-tokens)
+   for this one repository, with a short expiry and only Contents and Pull requests
+   (read and write). Never grant Workflows or Administration. Sign in with it inside the
+   container: `gh auth login`, then `gh auth setup-git`.
+7. Start Claude Code with `claude` in the container's terminal (or open the Claude Code
+   extension in VS Code) and sign in.
+8. Write the project's first CR (see below) and work through it as `CLAUDE.md`
    describes.
 
 ## What a project's first CR changes
@@ -62,8 +124,9 @@ template.
 - **Changelog:** a fresh `CHANGELOG.md` with an empty `Unreleased` section. Keep
   `docs/cr/CR-0000-template-repository.md` as the record of how the template was built.
 - **README:** a description of the project, replacing this one.
-- **Tooling:** the language toolchain, build and test jobs in CI, and Dependabot entries
-  for the project's packages.
+- **Tooling:** the language toolchain in `.devcontainer/Dockerfile`, any package
+  registries or APIs in `.devcontainer/allowed-domains.txt`, build and test jobs in CI,
+  and Dependabot entries for the project's packages.
 - **`CLAUDE.md`:** the project's commands and notes.
 - **Versioning:** the single place the version number lives (ADR-0002).
 - **Docs:** the test strategy and "run everything" command in `docs/test-plan.md`; the
@@ -72,7 +135,11 @@ template.
 
 ## Verifying a project
 
-`docs/test-plan.md` explains how: run the single command that runs every automated
+The dev container checks itself: run `bash .devcontainer/verify-container.sh` inside
+it after any change to `.devcontainer/` or to your computer's setup. The manual checks
+it can't do are listed in `docs/test-plan.md`.
+
+For the project as a whole, `docs/test-plan.md` explains how: run the single command that runs every automated
 check, work through the manual checks, and confirm every acceptance criterion of every
 completed CR is covered by a named test or a listed manual check.
 
