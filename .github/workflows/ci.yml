@@ -34,8 +34,11 @@ jobs:
           echo "${GITLEAKS_SHA256}  $file" | sha256sum -c -
           tar -xzf "$file" gitleaks
           sudo install -m 0755 gitleaks /usr/local/bin/gitleaks
-      - name: Scan full git history
-        run: gitleaks git --redact --no-banner --verbose .
+      - name: Scan the history being merged
+        # Only history reachable from the checked-out commit: on a pull request that is
+        # main plus the PR's commits. Without this, gitleaks scans every branch, so a
+        # secret on any other branch would fail every pull request.
+        run: gitleaks git --redact --no-banner --verbose --log-opts="HEAD" .
 
   markdown-lint:
     name: Markdown lint
