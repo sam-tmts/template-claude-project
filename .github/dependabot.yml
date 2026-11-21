@@ -1,0 +1,8 @@
+# Proposes updates for pinned GitHub Actions. Projects add their own package ecosystems
+# (for example pip or npm) in their first CR.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
