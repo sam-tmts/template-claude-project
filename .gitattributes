@@ -1,0 +1,17 @@
+# Store text files with LF line endings in the repository, whatever the
+# collaborator's operating system, so Mac and Windows diffs stay clean.
+* text=auto eol=lf
+
+# Windows-only scripts keep CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary files: never convert line endings or attempt text diffs
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.gz binary
