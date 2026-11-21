@@ -96,6 +96,6 @@ Manual checks M1 to M4 are written up in `docs/test-plan.md`.
 | Original plan approved | 2026-11-21 | Sam (sam-tmts) | Superseded |
 | Rewrite approved | 2026-11-21 | Sam (sam-tmts) | Lean scope; container moved to CR-0001 |
 | Plan approved | 2026-11-21 | Sam (sam-tmts) | Plan in the PR description |
-| AC6 rewording approved | | | Review finding: settings aren't copied from a template |
-| PR merged | | | |
+| AC6 rewording approved | 2026-11-21 | Sam (sam-tmts) | Review finding: settings aren't copied from a template |
+| PR merged | 2026-11-21 | Sam (sam-tmts) | PR #1, merge commit 5656df3; M1 to M3 done, M4 after release |
 | Released (v0.1.0) | | | |

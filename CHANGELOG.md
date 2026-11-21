@@ -9,6 +9,8 @@ heading and is tagged `vX.Y.Z`.
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-11-21
+
 ### Added
 
 - Repository basics: `.gitignore`, `.gitattributes` (LF line endings), `.editorconfig`,
@@ -21,3 +23,6 @@ heading and is tagged `vX.Y.Z`.
   pinning check), pull request template, CR issue form, Dependabot and CODEOWNERS
   (CR-0000).
 - README explaining how to start a project from the template (CR-0000).
+
+[Unreleased]: https://github.com/sam-tmts/template-claude-project/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/sam-tmts/template-claude-project/releases/tag/v0.1.0
