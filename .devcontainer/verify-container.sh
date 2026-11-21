@@ -25,6 +25,25 @@ reachable() {  # reachable <url>: any HTTP response counts as reachable
     curl -s -o /dev/null --connect-timeout 5 --max-time 10 "$1"
 }
 
+echo "== Platform"
+# On Apple silicon everything should run natively (aarch64). An Intel-only image would
+# still run under emulation, slowly and with known problems, so check explicitly.
+kernel_arch=$(uname -m)
+elf_arch() {  # elf_arch <file>: machine type from the ELF header (bytes 18-19)
+    case "$(od -An -tx1 -j18 -N2 "$1" 2>/dev/null | tr -d ' \n')" in
+        b700) echo aarch64 ;;
+        3e00) echo x86_64 ;;
+        *) echo unknown ;;
+    esac
+}
+gitleaks_arch=$(elf_arch "$(command -v gitleaks)")
+node_arch=$(elf_arch "$(command -v node)")
+if [ "$gitleaks_arch" = "$kernel_arch" ] && [ "$node_arch" = "$kernel_arch" ]; then
+    result platform-native-binaries 0 "gitleaks and node match the container ($kernel_arch)"
+else
+    result platform-native-binaries 1 "container $kernel_arch, gitleaks $gitleaks_arch, node $node_arch"
+fi
+
 echo "== AC2: network"
 if reachable https://example.com; then
     result cr0001-ac2-example-com-blocked 1 "https://example.com was reachable"
