@@ -23,7 +23,9 @@ agreed in plan mode and kept in the pull request description, not in the CR. A G
 issue may track a CR, but the file is the specification. Commits are titled
 `CR-NNNN: <imperative summary>`, and every pull request links its CR. The one exception
 is Dependabot's routine updates of already approved dependencies, which the owner
-reviews and merges without a CR.
+reviews and merges without a CR. Trivial changes (records, typos, documentation wording,
+changelog moves; see `CLAUDE.md`) still link a CR, but skip the separate plan and
+reviewer pass and use a short PR description.
 
 ## Consequences
 
