@@ -1,0 +1,17 @@
+# Hosts the dev container may reach over HTTPS, besides GitHub (whose published address
+# ranges are always allowed) and the container's DNS resolver. One hostname per line.
+#
+# This is a protected path: adding a host needs a CR, and takes effect only after the
+# container is rebuilt. Projects add their own hosts (package registries, APIs) in their
+# first CR and later CRs.
+#
+# VS Code extensions are not downloaded from inside the container: VS Code downloads
+# them on the host and copies them in (remote.downloadExtensionsLocally, see README).
+
+# Claude Code: model API
+api.anthropic.com
+
+# Claude Code: signing in with a Claude account. CR-0001's sign-in check (AC6) confirms
+# whether both are needed; remove any that aren't.
+claude.ai
+console.anthropic.com

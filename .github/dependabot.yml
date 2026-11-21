@@ -1,8 +1,13 @@
-# Proposes updates for pinned GitHub Actions. Projects add their own package ecosystems
-# (for example pip or npm) in their first CR.
+# Proposes updates for pinned GitHub Actions and the dev container's images. Projects add
+# their own package ecosystems (for example pip or npm) in their first CR.
 version: 2
 updates:
   - package-ecosystem: github-actions
     directory: /
+    schedule:
+      interval: weekly
+  # The dev container's base image and the gitleaks image it copies from
+  - package-ecosystem: docker
+    directory: /.devcontainer
     schedule:
       interval: weekly

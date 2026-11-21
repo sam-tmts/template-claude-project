@@ -1,0 +1,55 @@
+{
+  // Adapted from Anthropic's reference dev container; see the header of Dockerfile for
+  // the upstream commit and the list of differences. Protected path: changes need a CR.
+  "name": "template-claude-project",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "TZ": "${localEnv:TZ:UTC}",
+      "CLAUDE_CODE_VERSION": "2.1.330"
+    }
+  },
+  // Needed for the firewall script to set iptables rules
+  "runArgs": ["--cap-add=NET_ADMIN", "--cap-add=NET_RAW"],
+  "customizations": {
+    "vscode": {
+      // Pinned to an exact version (anthropic.claude-code@x.y.z) once the first build
+      // on the owner's Mac records it (CR-0001 verification). VS Code downloads
+      // extensions on the host and copies them in (remote.downloadExtensionsLocally,
+      // see README), so the container never contacts the extension marketplace.
+      "extensions": ["anthropic.claude-code"],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        // Stop VS Code passing git sign-in requests back to the host's GitHub account,
+        // whose token can reach every repository the owner can
+        "git.terminalAuthentication": false,
+        "github.gitAuthentication": false,
+        // Extension versions change only through a reviewed CR
+        "extensions.autoUpdate": false
+      }
+    }
+  },
+  "remoteUser": "node",
+  // Only the project folder comes from the host. Claude Code's own settings and sign-in
+  // live in a Docker volume, not on the host.
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=delegated",
+  "workspaceFolder": "/workspace",
+  "mounts": [
+    "source=claude-code-config-${devcontainerId},target=/home/node/.claude,type=volume"
+  ],
+  "containerEnv": {
+    "CLAUDE_CONFIG_DIR": "/home/node/.claude",
+    "DISABLE_AUTOUPDATER": "1",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
+  },
+  // Don't pass the host's SSH agent into the container. VS Code's own git credential
+  // sharing must also be switched off on the host: see README.md.
+  "remoteEnv": {
+    "SSH_AUTH_SOCK": ""
+  },
+  // Set in the container's own git config, not the project's .git/config, so git on
+  // the host never runs hooks from the shared folder
+  "postCreateCommand": "git config --global core.hooksPath /workspace/.githooks",
+  "postStartCommand": "sudo /usr/local/bin/init-firewall.sh",
+  "waitFor": "postStartCommand"
+}
