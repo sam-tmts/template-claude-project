@@ -1,0 +1,12 @@
+#!/bin/sh
+# Scans staged changes for secrets before every commit (ADR-0004). The dev container
+# points git at this folder (postCreateCommand in devcontainer.json); CI runs the same
+# scan again in case this hook is bypassed. Protected path: changes need a CR.
+set -eu
+
+if ! command -v gitleaks >/dev/null 2>&1; then
+    echo "pre-commit: gitleaks is not installed. Commit from inside the dev container." >&2
+    exit 1
+fi
+
+exec gitleaks git --pre-commit --staged --redact --no-banner .

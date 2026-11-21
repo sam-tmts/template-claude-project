@@ -33,7 +33,10 @@
       "Bash(git branch -d *)",
       "Bash(git branch -D *)",
       "Bash(git branch --delete *)",
-      "Bash(gh pr merge*)"
+      "Bash(gh pr merge*)",
+      "Bash(git -C *)",
+      "Bash(git push * +*)",
+      "Bash(git push +*)"
     ],
     "ask": [
       "Edit(/.devcontainer/**)",
@@ -45,7 +48,10 @@
       "Bash(git push *)",
       "Bash(gh *)",
       "Bash(curl *)",
-      "Bash(wget *)"
+      "Bash(wget *)",
+      "Bash(bash -c *)",
+      "Bash(sh -c *)",
+      "Bash(env *)"
     ],
     "disableBypassPermissionsMode": "disable"
   }
