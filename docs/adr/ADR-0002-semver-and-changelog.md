@@ -22,6 +22,9 @@ version numbers and a readable record of what changed.
   format.
 - A release moves the `Unreleased` entries under a version heading, and is marked by a
   `vX.Y.Z` git tag.
+- A release may include work whose CR isn't Done, but each such changelog entry is
+  marked **experimental**, saying what isn't verified yet (see the release criteria in
+  `docs/test-plan.md`).
 - Projects stay at `0.x` until their public interface settles.
 
 ## Consequences

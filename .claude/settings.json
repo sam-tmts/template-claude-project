@@ -1,5 +1,27 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "sandbox": {
+    "enabled": true,
+    "allowUnsandboxedCommands": false,
+    "failIfUnavailable": true,
+    "excludedCommands": [
+      "git push *"
+    ],
+    "filesystem": {
+      "denyRead": [
+        "~/.ssh",
+        "~/.aws",
+        "~/.config/gh",
+        "~/.git-credentials",
+        "~/.netrc"
+      ]
+    },
+    "network": {
+      "allowedDomains": [
+        "github.com"
+      ]
+    }
+  },
   "permissions": {
     "deny": [
       "Read(**/.env)",
@@ -10,22 +32,16 @@
       "Read(~/.aws/**)",
       "Read(~/.config/gh/**)",
       "Read(~/.git-credentials)",
-      "Edit(/.git/**)",
+      "Read(~/.netrc)",
       "Bash(git push --force*)",
       "Bash(git push -f*)",
       "Bash(git push * --force*)",
       "Bash(git push * -f*)",
+      "Bash(git push +*)",
+      "Bash(git push * +*)",
       "Bash(git push * --delete *)",
       "Bash(git commit --amend*)",
       "Bash(git commit * --amend*)",
-      "Bash(git commit --no-verify*)",
-      "Bash(git commit * --no-verify*)",
-      "Bash(git commit -n*)",
-      "Bash(git commit * -n *)",
-      "Bash(git commit * -n)",
-      "Bash(git -c *)",
-      "Bash(git config *hooksPath*)",
-      "Bash(git config *fsmonitor*)",
       "Bash(git rebase *)",
       "Bash(git reset --hard*)",
       "Bash(git filter-branch *)",
@@ -36,11 +52,8 @@
       "Bash(gh pr merge*)"
     ],
     "ask": [
-      "Edit(/.devcontainer/**)",
       "Edit(/.claude/**)",
-      "Edit(/.githooks/**)",
       "Edit(/.github/**)",
-      "Edit(/.vscode/**)",
       "Edit(/SECURITY.md)",
       "Bash(git push *)",
       "Bash(gh *)",

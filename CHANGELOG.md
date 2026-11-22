@@ -9,6 +9,20 @@ heading and is tagged `vX.Y.Z`.
 
 ## [Unreleased]
 
+### Added
+
+- Principles in `CLAUDE.md`, in priority order, and a rule to challenge complexity
+  before building; the reviewer's checks follow the principles (CR-0001).
+- Claude Code's sandbox in strict mode, for working safely in a dedicated developer
+  account (CR-0001).
+- A lighter path for trivial changes, and release criteria with a retrospective before
+  each release (CR-0001).
+
+### Changed
+
+- Documentation trimmed so each fact lives in one place: SECURITY.md and the README
+  link to the ADRs and threat model instead of repeating them (CR-0001).
+
 ### Fixed
 
 - README: the repository settings steps now use GitHub's current names (Secret

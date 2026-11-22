@@ -1,40 +1,46 @@
 # template-claude-project
 
 A GitHub template for hobby software projects developed with coding agents such as
-Claude Code, set up so that others can use the same approach. Every project started from
-it works the same way:
+Claude Code, set up so that others can use the same approach. Its principles, in
+priority order, are in [`CLAUDE.md`](CLAUDE.md): elegance through simplicity; easy to
+use, fun to use; security in proportion to risk; learn from others, keep improving;
+document clearly and concisely; automate what repeats.
 
-- **Change requests drive every change.** Each change starts as a CR file in `docs/cr/`
-  saying why, what's in and out of scope, and the acceptance criteria, each with how
-  it's verified. The implementation plan is agreed before work starts and kept in the
-  pull request ([ADR-0001](docs/adr/ADR-0001-change-requests-in-repo.md)).
-- **Tests come first.** Acceptance tests are written from the CR before the code, and
-  carry the CR and criterion they verify. See [the test plan](docs/test-plan.md).
-- **Decisions are written down** as ADRs in `docs/adr/`.
+Every project started from it works the same way:
+
+- **Change requests drive every change**, each with acceptance criteria that say how
+  they're verified ([ADR-0001](docs/adr/ADR-0001-change-requests-in-repo.md)).
+- **Tests come first**, and every criterion is traceable to a test or a manual check
+  ([test plan](docs/test-plan.md)).
 - **Releases follow semver**, with a hand-written changelog
   ([ADR-0002](docs/adr/ADR-0002-semver-and-changelog.md)).
 - **Real secrets never enter the repository**
   ([ADR-0003](docs/adr/ADR-0003-secrets-outside-repository.md)).
+- **Agents work in Claude Code's sandbox**, in a dedicated developer account
+  ([ADR-0004](docs/adr/ADR-0004-sandboxed-development.md)).
 
 ## What's inside
 
 | Path | What it is |
 |------|------------|
-| `CLAUDE.md` | Instructions every agent session reads first: workflow, rules, conventions |
-| `.claude/` | Claude Code permission rules, and the `reviewer` and `test-writer` subagents |
+| `CLAUDE.md` | Principles, workflow and rules every agent session reads first |
+| `.claude/` | Sandbox and permission settings, and the `reviewer` and `test-writer` subagents |
 | `.github/` | CI, pull request template, CR issue form, Dependabot, CODEOWNERS |
-| `docs/cr/` | Change requests, and the template for new ones |
-| `docs/adr/` | Architecture decision records, and the template for new ones |
-| `docs/test-plan.md` | Test strategy, manual checks, and how to validate the project |
-| `docs/` (other) | Architecture, threat model and dependency register, for each project to fill |
+| `docs/` | CRs, ADRs, test plan, threat model, architecture, dependencies, retrospectives |
 | `CHANGELOG.md`, `SECURITY.md`, `LICENSE` | Release notes, security policy, MIT licence |
 
-## Before you start: running agents safely
+## One-time setup on your computer
 
-The next version of this template (CR-0001) adds a dev container that keeps coding
-agents away from everything on your computer except the project folder. Until then,
-don't run Claude Code on your own computer against a repository made from this
-template.
+1. **Use a dedicated developer account**, with no access to your personal files, for
+   all development.
+2. **Install [Claude Code](https://code.claude.com/docs/en/overview)** in that account.
+   On macOS the sandbox needs nothing else. On Linux, and on Windows through WSL2, run
+   `/sandbox` in Claude Code to see what to install.
+3. **Install git** (on macOS: `xcode-select --install`), and create a
+   [fine-grained personal access token](https://github.com/settings/personal-access-tokens)
+   limited to your project repositories, with a short expiry and only Contents (read
+   and write). Push once from an ordinary terminal and paste the token when asked for a
+   password; git stores it for later pushes, including Claude's.
 
 ## Starting a new project
 
@@ -46,35 +52,48 @@ template.
      and `PR references a CR`. (GitHub lists a check here only after it has run once,
      so add them after the first pull request.)
    - **Security → Advanced Security:** turn on Dependabot alerts, **Secret
-     Protection** (GitHub's name for secret scanning) and its **Push protection**
-     option, and private vulnerability reporting (which `SECURITY.md` points to).
-   - **Actions → General** (under **Actions** in the Settings sidebar, not the
-     top-level General page): under "Approval for running fork pull request workflows
-     from contributors", require approval for all external contributors; under
-     "Workflow permissions", choose read-only and save.
-3. Write the project's first CR (see below) and work through it as `CLAUDE.md`
+     Protection** and its **Push protection** option, and private vulnerability
+     reporting (which `SECURITY.md` points to).
+   - **Actions → General** (under **Actions** in the Settings sidebar): require
+     approval for fork pull request workflows from all external contributors, and set
+     workflow permissions to read-only.
+3. Clone it over HTTPS, start `claude` in the folder, and run `/sandbox` to confirm the
+   sandbox is on.
+   Open pull requests on GitHub's website: after a push, git prints the link.
+4. Write the project's first CR (see below) and work through it as `CLAUDE.md`
    describes.
+
+## Working in the sandbox
+
+The project's sandbox settings live in `.claude/settings.json`: shell commands run
+without prompting inside the sandbox, while file edits, pushes and anything outside it
+still ask. To be asked before every command, add a personal override to
+`.claude/settings.local.json` (git-ignored):
+
+```json
+{ "sandbox": { "autoAllowBashIfSandboxed": false } }
+```
+
+`git push` is the one command that runs outside the sandbox, so that only it can use
+your GitHub token; it always asks before each push. A project that needs another host
+(a package registry, an API) adds it to `sandbox.network.allowedDomains` through a CR;
+if Claude Code offers to allow a new host, decline unless a CR covers it.
 
 ## What a project's first CR changes
 
 - **Names:** the owner wherever the template names one: `.github/CODEOWNERS`,
   `CLAUDE.md`, `SECURITY.md` and `LICENSE`.
 - **Changelog:** a fresh `CHANGELOG.md` with an empty `Unreleased` section. Keep
-  `docs/cr/CR-0000-template-repository.md` as the record of how the template was built.
+  `docs/cr/` as the record of how the template was built.
 - **README:** a description of the project, replacing this one.
-- **Tooling:** the language toolchain, build and test jobs in CI, and Dependabot entries
-  for the project's packages.
+- **Tooling:** the language toolchain, build and test jobs in CI, Dependabot entries
+  for the project's packages, and any hosts the sandbox must allow.
 - **`CLAUDE.md`:** the project's commands and notes.
-- **Versioning:** the single place the version number lives (ADR-0002).
-- **Docs:** the test strategy and "run everything" command in `docs/test-plan.md`; the
-  system context and containers in `docs/architecture.md`; the project's own assets and
-  threats in `docs/threat-model.md`; its dependencies in `docs/dependencies.md`.
+- **Docs:** the test strategy and "run everything" command in `docs/test-plan.md`,
+  and the project's own sections in `docs/architecture.md`, `docs/threat-model.md` and
+  `docs/dependencies.md`.
 
-## Verifying a project
-
-`docs/test-plan.md` explains how: run the single command that runs every automated
-check, work through the manual checks, and confirm every acceptance criterion of every
-completed CR is covered by a named test or a listed manual check.
+## Notes
 
 Dependabot's pull requests don't need a CR: they are routine updates of already
 approved dependencies, so the CI check for a CR reference skips them. The owner still
