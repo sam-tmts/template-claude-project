@@ -39,8 +39,8 @@ Every project started from it works the same way:
 3. **Install git** (on macOS: `xcode-select --install`), and create a
    [fine-grained personal access token](https://github.com/settings/personal-access-tokens)
    limited to your project repositories, with a short expiry and only Contents (read
-   and write). The first time you `git push` from a terminal, paste the token when asked
-   for a password; git stores it for later pushes.
+   and write). Push once from an ordinary terminal and paste the token when asked for a
+   password; git stores it for later pushes, including Claude's.
 
 ## Starting a new project
 
@@ -74,12 +74,10 @@ still ask. To be asked before every command, add a personal override to
 { "sandbox": { "autoAllowBashIfSandboxed": false } }
 ```
 
-A project that needs another host (a package registry, an API) adds it to
-`sandbox.network.allowedDomains` through a CR; if Claude Code offers to allow a new
-host, decline unless a CR covers it. If `git push` can't reach your stored GitHub
-credentials from inside the sandbox, run it outside the sandbox by adding
-`"excludedCommands": ["git push *"]` under `sandbox` in your
-`.claude/settings.local.json`; it still asks before each push.
+`git push` is the one command that runs outside the sandbox, so that only it can use
+your GitHub token; it always asks before each push. A project that needs another host
+(a package registry, an API) adds it to `sandbox.network.allowedDomains` through a CR;
+if Claude Code offers to allow a new host, decline unless a CR covers it.
 
 ## What a project's first CR changes
 

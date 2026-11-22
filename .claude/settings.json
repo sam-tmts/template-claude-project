@@ -4,6 +4,9 @@
     "enabled": true,
     "allowUnsandboxedCommands": false,
     "failIfUnavailable": true,
+    "excludedCommands": [
+      "git push *"
+    ],
     "filesystem": {
       "denyRead": [
         "~/.ssh",
