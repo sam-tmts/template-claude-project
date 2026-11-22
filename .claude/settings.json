@@ -30,7 +30,6 @@
       "Read(~/.config/gh/**)",
       "Read(~/.git-credentials)",
       "Read(~/.netrc)",
-      "Edit(/.git/**)",
       "Bash(git push --force*)",
       "Bash(git push -f*)",
       "Bash(git push * --force*)",
