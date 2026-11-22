@@ -1,3 +1,6 @@
+<!-- Trivial change (see CLAUDE.md)? Fill in only Change request, Summary, Semver
+impact and Notes, and delete the other sections. -->
+
 ## Change request
 
 Implements: CR-NNNN (`docs/cr/CR-NNNN-....md`)
@@ -26,8 +29,8 @@ The plan the owner approved in plan mode, and any way the build differed from it
 - [ ] No new dependencies, or each one is in `docs/dependencies.md` and was approved
 - [ ] Architecture, threat model and ADRs updated, or not affected
 - [ ] No secrets, credentials or personal data in the diff
-- [ ] No protected paths changed (`.devcontainer/`, `.claude/`, `.githooks/`,
-      `.github/workflows/`, `SECURITY.md`), or the CR covers them and they are called out below
+- [ ] No protected paths changed (`.claude/`, `.github/workflows/`,
+      `.github/scripts/`, `SECURITY.md`), or the CR covers them and they are called out below
 - [ ] Reviewer subagent run; findings listed below
 
 ## Acceptance criteria evidence
