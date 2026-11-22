@@ -21,6 +21,9 @@ dependency or through prompt injection.
   `.claude/settings.json`): shell commands can write only inside the project, can't
   read the account's credential locations, can reach only allowlisted hosts, can't be
   retried outside the sandbox, and Claude Code won't start if the sandbox can't.
+- `git push` is the one command that runs outside the sandbox, because pushing needs
+  the stored GitHub token and sandboxed commands can't reach it. Claude asks before
+  every push.
 - Claude's own file tools run outside the sandbox and are governed by the permission
   rules in the same file.
 - Adding a host or path to the sandbox is a change to a protected path, so it needs a

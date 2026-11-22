@@ -34,8 +34,9 @@ Every project started from it works the same way:
 1. **Use a dedicated developer account**, with no access to your personal files, for
    all development.
 2. **Install [Claude Code](https://code.claude.com/docs/en/overview)** in that account.
-   On macOS the sandbox needs nothing else. On Linux, and on Windows through WSL2, run
-   `/sandbox` in Claude Code to see what to install.
+   Claude's commands run in a sandbox; `git push` is the only exception, and Claude asks
+   before every push ([details](docs/adr/ADR-0004-sandboxed-development.md)). On Linux,
+   and on Windows through WSL2, run `/sandbox` in Claude Code to see what to install.
 3. **Install git** (on macOS: `xcode-select --install`), and create a
    [fine-grained personal access token](https://github.com/settings/personal-access-tokens)
    limited to your project repositories, with a short expiry and only Contents (read
@@ -62,22 +63,6 @@ Every project started from it works the same way:
    Open pull requests on GitHub's website: after a push, git prints the link.
 4. Write the project's first CR (see below) and work through it as `CLAUDE.md`
    describes.
-
-## Working in the sandbox
-
-The project's sandbox settings live in `.claude/settings.json`: shell commands run
-without prompting inside the sandbox, while file edits, pushes and anything outside it
-still ask. To be asked before every command, add a personal override to
-`.claude/settings.local.json` (git-ignored):
-
-```json
-{ "sandbox": { "autoAllowBashIfSandboxed": false } }
-```
-
-`git push` is the one command that runs outside the sandbox, so that only it can use
-your GitHub token; it always asks before each push. A project that needs another host
-(a package registry, an API) adds it to `sandbox.network.allowedDomains` through a CR;
-if Claude Code offers to allow a new host, decline unless a CR covers it.
 
 ## What a project's first CR changes
 
