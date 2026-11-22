@@ -15,8 +15,7 @@
     },
     "network": {
       "allowedDomains": [
-        "github.com",
-        "api.github.com"
+        "github.com"
       ]
     }
   },
@@ -32,7 +31,6 @@
       "Read(~/.git-credentials)",
       "Read(~/.netrc)",
       "Edit(/.git/**)",
-      "Bash(git -C *)",
       "Bash(git push --force*)",
       "Bash(git push -f*)",
       "Bash(git push * --force*)",

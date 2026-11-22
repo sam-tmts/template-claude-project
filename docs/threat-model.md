@@ -34,11 +34,11 @@ Update it in the same pull request as any change that affects these.
 | **Agent reaches personal data** | Dedicated developer account; sandbox | None while the account holds no personal data |
 | **Prompt injection:** an agent acts on instructions hidden in something it reads | Sandbox; `CLAUDE.md` rule to treat such text as data; owner review at every gate | An injected change could reach a pull request; owner review is the backstop |
 | **Credential theft** | Real secrets never enter the repository (ADR-0003); sandbox blocks reads of credential locations; permission rules block Claude's file tools from them | Credentials in the developer account outside those locations; keep tokens fine-grained and short-lived |
-| **Data sent out** | Sandbox network allowlist (GitHub only by default) | Data could be sent to an allowed service, such as a GitHub gist |
+| **Data sent out** | Sandbox network allowlist (GitHub only by default); developers decline prompts to allow new hosts unless a CR covers them | Data could be sent to an allowed service, such as a GitHub gist |
 | **Secrets committed by mistake** | GitHub push protection; gitleaks in CI as a required check; GitHub secret scanning | The repository is public: a secret push protection doesn't recognise is public once pushed, even if CI stops it reaching `main` |
 | **Malicious or typo-squatted dependency** | Owner approves every dependency (`docs/dependencies.md`); pinned versions; Dependabot; sandbox limits damage | A compromised version of an approved dependency |
 | **Compromised GitHub Action** | Actions pinned to full commit SHAs (checked in CI); read-only workflow token; fork PR workflows need approval | A compromised action at the pinned commit |
-| **Unreviewed change reaches `main`** | Ruleset requires a pull request and passing checks, and blocks force-push and deletion; Claude Code can't merge and asks before pushing | With no required approval, anyone with write access can merge. Accepted while the owner reviews every change; a separate agent account is on the backlog |
+| **Unreviewed change reaches `main`** | Ruleset requires a pull request and passing checks, and blocks force-push and deletion; Claude Code can't merge and asks before pushing | With no required approval, anyone with write access can merge, and if git pushes work inside the sandbox, sandboxed commands can use the stored GitHub token without a prompt. Accepted while the owner reviews every change and the token is fine-grained and short-lived; a separate agent account is on the backlog |
 | **Destructive mistake** (deleting files, rewriting history) | Sandbox limits writes to the project; permission rules block force-push, rebase, amend and branch deletion; everything is in git | Uncommitted work in the project could be lost |
 
 ## Known limitations
@@ -51,3 +51,6 @@ Update it in the same pull request as any change that affects these.
   weakening it.
 - The network allowlist checks hostnames through a local proxy; an allowed host's other
   uses (such as GitHub gists) are reachable too.
+- Permission rules for shell commands match command prefixes, so the same command
+  written another way (for example `git -c … push --force`) can get past them. The
+  sandbox and the `main` ruleset are the real backstops.

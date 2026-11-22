@@ -34,11 +34,13 @@ Every project started from it works the same way:
 1. **Use a dedicated developer account**, with no access to your personal files, for
    all development.
 2. **Install [Claude Code](https://code.claude.com/docs/en/overview)** in that account.
-   On macOS the sandbox needs nothing else; on Windows, use WSL2.
-3. **Install git** (on macOS: `xcode-select --install`), and sign in to GitHub over
-   HTTPS with a [fine-grained personal access token](https://github.com/settings/personal-access-tokens)
-   limited to your project repositories, with a short expiry and only Contents and
-   Pull requests (read and write).
+   On macOS the sandbox needs nothing else. On Linux, and on Windows through WSL2, run
+   `/sandbox` in Claude Code to see what to install.
+3. **Install git** (on macOS: `xcode-select --install`), and create a
+   [fine-grained personal access token](https://github.com/settings/personal-access-tokens)
+   limited to your project repositories, with a short expiry and only Contents (read
+   and write). The first time you `git push` from a terminal, paste the token when asked
+   for a password; git stores it for later pushes.
 
 ## Starting a new project
 
@@ -57,6 +59,7 @@ Every project started from it works the same way:
      workflow permissions to read-only.
 3. Clone it over HTTPS, start `claude` in the folder, and run `/sandbox` to confirm the
    sandbox is on.
+   Open pull requests on GitHub's website: after a push, git prints the link.
 4. Write the project's first CR (see below) and work through it as `CLAUDE.md`
    describes.
 
@@ -72,9 +75,11 @@ still ask. To be asked before every command, add a personal override to
 ```
 
 A project that needs another host (a package registry, an API) adds it to
-`sandbox.network.allowedDomains` through a CR. If `git push` can't reach your stored
-GitHub credentials from inside the sandbox, the fallback is to run it outside the
-sandbox with `"excludedCommands": ["git push *"]`; it still asks before each push.
+`sandbox.network.allowedDomains` through a CR; if Claude Code offers to allow a new
+host, decline unless a CR covers it. If `git push` can't reach your stored GitHub
+credentials from inside the sandbox, run it outside the sandbox by adding
+`"excludedCommands": ["git push *"]` under `sandbox` in your
+`.claude/settings.local.json`; it still asks before each push.
 
 ## What a project's first CR changes
 
