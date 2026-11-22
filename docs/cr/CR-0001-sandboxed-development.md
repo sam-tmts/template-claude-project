@@ -2,7 +2,7 @@
 
 | Field         | Value                                                         |
 |---------------|---------------------------------------------------------------|
-| Status        | Approved (replaces the earlier dev container version)         |
+| Status        | Done                                                          |
 | Author        | sam-tmts (drafted with Claude)                                |
 | Created       | 2026-11-21                                                    |
 | Semver impact | minor: enables local agentic development and workflow rules   |
@@ -110,31 +110,31 @@ Relies on: ADR-0001, ADR-0003.
 
 ## Acceptance criteria
 
-- [ ] AC1: A shell command Claude runs can't reach a host outside the allowlist.
+- [x] AC1: A shell command Claude runs can't reach a host outside the allowlist.
       *Verified by:* manual check M5.
-- [ ] AC2: A shell command Claude runs can't write outside the project folder, or read
+- [x] AC2: A shell command Claude runs can't write outside the project folder, or read
       the account's credential files (for example `~/.ssh`).
       *Verified by:* manual check M6.
-- [ ] AC3: Strict mode holds: Claude can't retry a command outside the sandbox, and
+- [x] AC3: Strict mode holds: Claude can't retry a command outside the sandbox, and
       Claude Code won't run commands if the sandbox can't start.
       *Verified by:* manual check M7.
-- [ ] AC4: Claude's file tools refuse to read `.env` and credential files, and Claude
+- [x] AC4: Claude's file tools refuse to read `.env` and credential files, and Claude
       Code blocks force-pushing and merging, each by a permission rule.
       *Verified by:* manual check M8.
-- [ ] AC5: Day-to-day work still flows: Claude can edit files, run git commands and the
+- [x] AC5: Day-to-day work still flows: Claude can edit files, run git commands and the
       project's tools, and a push goes through the normal approval.
       *Verified by:* manual check M9.
-- [ ] AC6: `CLAUDE.md` opens with the six principles and contains the "Challenge
+- [x] AC6: `CLAUDE.md` opens with the six principles and contains the "Challenge
       before building" rule, both word for word as in this CR, and the reviewer's
       checks follow the principles in order.
       *Verified by:* this CR's independent review, which uses the new checks.
-- [ ] AC7: The trivial-change rule is in `CLAUDE.md`, the PR template and ADR-0001.
+- [x] AC7: The trivial-change rule is in `CLAUDE.md`, the PR template and ADR-0001.
       *Verified by:* this CR's closing PR uses it.
-- [ ] AC8: The release criteria allow unfinished work only when its changelog entries
+- [x] AC8: The release criteria allow unfinished work only when its changelog entries
       are marked experimental, and require a retrospective entry before each release.
       *Verified by:* this CR's release follows them, with the first entry in
       `docs/retrospectives.md`.
-- [ ] AC9: No fact about the template's setup, workflow or security is stated in more
+- [x] AC9: No fact about the template's setup, workflow or security is stated in more
       than one document; repeats are replaced by links.
       *Verified by:* the reviewer's documentation check.
 
@@ -154,5 +154,5 @@ Relies on: ADR-0001, ADR-0003.
 |------|------|----|-------|
 | CR approved | 2026-11-22 | Sam (sam-tmts) | Replaces the dev container version approved on 2026-11-21 |
 | Plan approved | 2026-11-22 | Sam (sam-tmts) | Plan in the PR description |
-| PR merged | | | |
-| Released | | | |
+| PR merged | 2026-11-22 | Sam (sam-tmts) | PR #6. AC1–AC5 verified on the Mac (M5–M9); M8 and M9 found two settings bugs, fixed before merge. AC6 accepted by the owner; AC9 by the review |
+| Released | 2026-11-22 | Sam (sam-tmts) | v0.2.0, tagged on this closing PR's merge; AC7 shown by this trivial-change PR, AC8 by the release and the first retrospective |

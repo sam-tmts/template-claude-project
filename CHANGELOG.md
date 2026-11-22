@@ -9,6 +9,8 @@ heading and is tagged `vX.Y.Z`.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-22
+
 ### Added
 
 - Principles in `CLAUDE.md`, in priority order, and a rule to challenge complexity
@@ -43,5 +45,6 @@ heading and is tagged `vX.Y.Z`.
   (CR-0000).
 - README explaining how to start a project from the template (CR-0000).
 
-[Unreleased]: https://github.com/sam-tmts/template-claude-project/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/sam-tmts/template-claude-project/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/sam-tmts/template-claude-project/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/sam-tmts/template-claude-project/releases/tag/v0.1.0
